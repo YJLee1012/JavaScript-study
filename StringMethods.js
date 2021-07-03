@@ -8,7 +8,7 @@ str.toUpperCase()//대문자
 str.toLowerCase()//소문자
 
 //문자->아스키코드
-"a".codePointAt(0);//97
+"a".codePointAt(0);//97 //파라미터는 바꿀 인덱스 번호
 //아스키코드->문자
 String.fromCodePoint(97)//"a"
 
