@@ -1,6 +1,7 @@
 //Generator
 //함수의 실행을 중간에 멈췄다가 재개할 수 있는 기능
-//함수옆에 * , yield키워드 사용
+//함수옆에 *을 써서 만들고, 내부에 yield키워드 사용
+//yield에서 함수의 실행을 멈출 수 있다.
 function* fn(){
     try{
         console.log(1);
@@ -94,3 +95,27 @@ function* fn(){
 const a = fn();
 //a.next()실행해야 index++ 실행됨
 //->generator를 사용하면 필요한 순간까지 계산을 미리하지 않고 미룰 수 있음
+
+
+//yeild*을 이용해 다른 generator불러오기
+function* gen1(){
+    yield "W";
+    yield "o";
+    yield "r";
+    yield "l";
+    yield "d";
+}
+function* gen2(){
+    yield "Hello,";
+    yield* gen1();//gen1 generator함수 호출
+    yield "!";
+}
+console.log(...gen2());
+//Hello, W o r l d !
+
+/**
+ * Generator는 다른 작업을 하다가 다시 돌아와서
+ * next()해주면 진행이 멈췄던 부분부터 이어서 실행한다는 장점
+ * 
+ * ex) Redux Saga
+ */
