@@ -1,0 +1,109 @@
+<!-- 클로저는 반환된 내부함수가 자신이 선언됐을 때의 환경(Lexical environment)인 스코프를 기억하여 자신이 선언됐을 때의 환경(스코프) 밖에서 호출되어도 그 환경(스코프)에 접근할 수 있는 함수를 말한다.
+이를 조금 더 간단히 말하면 클로저는 자신이 생성될 때의 환경(Lexical environment)을 기억하는 함수 -->
+<!-- 클로저가 가장 유용하게 사용되는 상황은 현재 상태를 기억하고 변경된 최신 상태를 유지하는 것이다. -->
+<!DOCTYPE html>
+<html>
+  <body>
+    <button class="toggle">toggle</button>
+    <div class="box" style="width: 100px; height: 100px; background: red"></div>
+
+    <script>
+      var box = document.querySelector(".box");
+      var toggleBtn = document.querySelector(".toggle");
+
+      var toggle = (function () {
+        var isShow = false;
+
+        // ① 클로저를 반환
+        return function () {
+          box.style.display = isShow ? "block" : "none";
+          // ③ 상태 변경
+          isShow = !isShow;
+        };
+      })();
+
+      // ② 이벤트 프로퍼티에 클로저를 할당
+      toggleBtn.onclick = toggle;
+    </script>
+  </body>
+
+  <!-- 클로저는 전역변수 사용을 억제해줄 수 있다. -->
+  <!-- 변수 counter는 전역 변수이기 때문에 언제든지 누구나 접근할 수 있고 변경할 수 있다. 이는 의도치 않게 값이 변경될 수 있다는 것을 의미한다. 
+  만약 누군가에 의해 의도치 않게 전역 변수 counter의 값이 변경됐다면 이는 오류로 이어진다.  -->
+  <body>
+    <p>전역 변수를 사용한 Counting</p>
+    <button id="inclease0">+</button>
+    <p id="count0">0</p>
+    <script>
+      var incleaseBtn0 = document.getElementById("inclease0");
+      var count0 = document.getElementById("count0");
+
+      // 카운트 상태를 유지하기 위한 전역 변수
+      var counter0 = 0;
+
+      function increase0() {
+        return ++counter0;
+      }
+
+      incleaseBtn0.onclick = function () {
+        count0.innerHTML = increase0();
+      };
+    </script>
+  </body>
+
+  <!-- 전역변수를 지역변수로 변경하여 의도치 않은 상태 변경은 방지했다. 
+    하지만 increase 함수가 호출될 때마다 지역변수 counter를 0으로 초기화하기 때문에 언제나 1이 표시된다. 
+    다시 말해 변경된 이전 상태를 기억하지 못한다. -->
+  <body>
+    <p>지역 변수를 사용한 Counting</p>
+    <button id="inclease1">+</button>
+    <p id="count1">0</p>
+    <script>
+      var incleaseBtn1 = document.getElementById("inclease1");
+      var count1 = document.getElementById("count1");
+
+      function increase1() {
+        // 카운트 상태를 유지하기 위한 지역 변수
+        var counter1 = 0;
+        return ++counter1;
+      }
+
+      incleaseBtn1.onclick = function () {
+        count1.innerHTML = increase1();
+      };
+    </script>
+  </body>
+
+  <!-- 클로저를 사용한 예제~! 안정성을 높이기 위해 클로저는 적극 사용된다-->
+  <!-- 스크립트가 실행되면 즉시실행함수(immediately-invoked function expression)가 호출되고 
+    변수 increase에는 함수 function () { return ++counter; }가 할당된다. 
+    이 함수는 자신이 생성됐을 때의 렉시컬 환경(Lexical environment)을 기억하는 클로저다. 
+    즉시실행함수는 호출된 이후 소멸되지만 즉시실행함수가 반환한 함수는 변수 increase에 할당되어 
+    inclease 버튼을 클릭하면 클릭 이벤트 핸들러 내부에서 호출된다. 
+    이때 클로저인 이 함수는 자신이 선언됐을 때의 렉시컬 환경인 즉시실행함수의 스코프에 속한 지역변수 counter를 기억한다. 
+    따라서 즉시실행함수의 변수 counter에 접근할 수 있고 변수 counter는 자신을 참조하는 함수가 소멸될 때가지 유지된다.
+    즉시실행함수는 한번만 실행되므로 increase가 호출될 때마다 변수 counter가 재차 초기화될 일은 없을 것이다. 
+    변수 counter는 외부에서 직접 접근할 수 없는 private 변수이므로 전역 변수를 사용했을 때와 같이 의도되지 않은 변경을 걱정할 필요도 없기 때문이 보다 안정적인 프로그래밍이 가능하다. -->
+  <body>
+    <p>클로저를 사용한 Counting</p>
+    <button id="inclease2">+</button>
+    <p id="count2">0</p>
+    <script>
+      var incleaseBtn2 = document.getElementById("inclease2");
+      var count2 = document.getElementById("count2");
+
+      var increase2 = (function () {
+        // 카운트 상태를 유지하기 위한 자유 변수
+        var counter2 = 0;
+        // 클로저를 반환
+        return function () {
+          return ++counter2;
+        };
+      })();
+
+      incleaseBtn2.onclick = function () {
+        count2.innerHTML = increase2();
+      };
+    </script>
+  </body>
+</html>
